@@ -7,65 +7,73 @@
 
 import UIKit
 
+struct Item {
+    var title:String
+    var image: UIImage?
+    var titleIsHidden: Bool
+    var buttonTitle: String {
+        switch titleIsHidden {
+            case true:
+                return "表示"
+            case false:
+                return "非表示"
+        }
+    }
+}
 
-class ViewController: UIViewController, UITableViewDataSource {
+
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
 
-    struct Item {
-        var title:String
-        var image: UIImage?
-        var titleIsHidden: Bool
-        func buttonTitle(titleIsHidde:Bool) -> String {
-            switch titleIsHidden {
-                case true:
-                    return "表示"
-                case false:
-                    return "非表示"
-            }
-        }
+    private var items = Array<Item>(repeating: Item(title: "text", image: UIImage(named: "bunny"), titleIsHidden: false), count: 20)
 
-    }
-
-    var cellArray = [Item]()
-    let cellNumber = 5
 
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
-
-        let item = Item(title: "text", image: UIImage(named: "bunny") ?? nil , titleIsHidden: false)
-
-        for n in 0 ..< cellNumber {
-            cellArray.append(item)
-        }
-
+        tableView.delegate = self
     }
 
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        80
+    }
+
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        cellNumber
+        items.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Reuse or create a cell.
-        let cell = tableView.dequeueReusableCell(withIdentifier: "basicStyle", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "basicStyle", for: indexPath) as! BasicStyle
 
-        // For a standard cell, use the UITableViewCell properties.
-        cell.textLabel!.text = cellArray[indexPath.row].title
-        cell.imageView!.image = cellArray[indexPath.row].image
-        cell.textLabel!.isHidden = cellArray[indexPath.row].titleIsHidden
+        cell.configure(
+            item: items[indexPath.row],
+            didTapHideButton: { [weak self] in
+                self?.items[indexPath.row].titleIsHidden.toggle()
+                self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+            }
+        )
         return cell
-    }
-    @IBAction func hide(_ sender: UIButton) {
-
-        let point = sender.convert(CGPoint.zero, to: tableView)
-        guard let indexPath = tableView.indexPathForRow(at: point) else {
-            return
-        }
-        cellArray[indexPath.row].titleIsHidden = !cellArray[indexPath.row].titleIsHidden
-        sender.setTitle(cellArray[indexPath.row].buttonTitle(titleIsHidde: cellArray[indexPath.row].titleIsHidden), for: .normal)
-        tableView.reloadData()
-
     }
 }
 
+class BasicStyle: UITableViewCell {
+    @IBOutlet private weak var hideButton: UIButton!
+
+    private var didTapHideButtonHandler: () -> Void = {}
+
+    func configure(item: Item, didTapHideButton: @escaping () -> Void) {
+        textLabel?.text = item.title
+        imageView?.image = item.image
+        textLabel?.isHidden = item.titleIsHidden
+        hideButton.setTitle(item.buttonTitle, for: .normal)
+        didTapHideButtonHandler = didTapHideButton
+    }
+
+    @IBAction func didTapHideButton(_ sender: Any) {
+        didTapHideButtonHandler()
+    }
+}

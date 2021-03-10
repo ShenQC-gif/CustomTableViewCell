@@ -16,7 +16,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="SNI-1U-dTD" customClass="Basic">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="SNI-1U-dTD">
                                 <rect key="frame" x="0.0" y="194" width="414" height="668"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
@@ -35,7 +35,7 @@
                                                     </constraints>
                                                     <state key="normal" title="非表示"/>
                                                     <connections>
-                                                        <action selector="hide:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0Kb-TA-jis"/>
+                                                        <action selector="didTapHideButton:" destination="NPA-tn-ilo" eventType="touchUpInside" id="Sb4-b5-LMk"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -45,7 +45,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="hideButton" destination="js5-4o-cUA" id="bju-Xa-U6M"/>
+                                            <outlet property="hideButton" destination="js5-4o-cUA" id="Aq2-By-aSK"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
